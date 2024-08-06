@@ -63,9 +63,13 @@ func (bdd *BadDomainDetection) filter() []*nlpb.DNS {
 func (bdd *BadDomainDetection) aggregate(matched []*nlpb.DNS) []*spb.Signal {
 	var sigs []*spb.Signal
 	keyBySrc := make(map[string][]*nlpb.DNS)
+
+
 	for _, m := range matched {
 		keyBySrc[m.SourceIp] = append(keyBySrc[m.SourceIp], m)
 	}
+	
+
 	for src, logs := range keyBySrc {
 		// Identify the time window of the bad DNS traffic.
 		earliest, latest := logs[0].Timestamp.AsTime(), logs[0].Timestamp.AsTime()

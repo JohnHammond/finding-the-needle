@@ -50,40 +50,40 @@ func (en *ExecutionNormalizer) normalize(line string) *nlpb.NormalizedLog {
 		log.Printf("invalid number of fields found; expect 9, found %d: %s\n", len(fields), line)
 		return nil
 	}
-
-	// <TODO: Implement me!>
-	// Implement the validate function in validator.go file.
-	// Parse and return `timestamp` field with validateTimestamp().
+	timestamp, err := validateTimestamp(fields[0])
 	if err != nil {
 		log.Printf("%v, skipping: %s\n", err, line)
 		return nil
 	}
-
-	// <TODO: Implement me!>
-	// Parse and return `uid` field with validateInt64().
+	uid, err := validateInt64(fields[3])
 	if err != nil {
 		log.Printf("%v, skipping: %s\n", err, line)
 		return nil
 	}
-
-	// <TODO: Implement me!>
-	// Parse and return `pid` field with validateInt64().
+	pid, err := validateInt64(fields[4])
 	if err != nil {
 		log.Printf("%v, skipping: %s\n", err, line)
 		return nil
 	}
-
-	// <TODO: Implement me!>
-	// Parse and return `ppid` field with validateInt64().
+	ppid, err := validateInt64(fields[5])
 	if err != nil {
 		log.Printf("%v, skipping: %s\n", err, line)
 		return nil
 	}
-
-	// <TODO: Implement me!>
-	// Parse and return `platform` field with validatePlatform().
-
-	// <TODO: Implement me!>
-	// Return a populated NormalizedLog proto message.
-	return &nlpb.NormalizedLog{}
+	platform := validatePlatform(fields[8])
+	return &nlpb.NormalizedLog{
+		Msg: &nlpb.NormalizedLog_ExecutionLog{
+			ExecutionLog: &nlpb.Execution{
+				Timestamp: timestamp,
+				Filepath:  strings.Trim(fields[1], "\""),
+				Command:   strings.Trim(fields[2], "\""),
+				Uid:       uid,
+				Pid:       pid,
+				Ppid:      ppid,
+				Cwd:       strings.Trim(fields[6], "\""),
+				Hostname:  strings.Trim(fields[7], "\""),
+				Platform:  platform,
+			},
+		},
+	}
 }

@@ -27,74 +27,67 @@ func (nn *NetflowNormalizer) normalize(line string) *nlpb.NormalizedLog {
 		log.Printf("invalid number of fields found; expect 11, found %d: %s\n", len(fields), line)
 		return nil
 	}
-
-	// <TODO: Implement me!>
-	// Implement the validate function in validator.go file.
-	// Parse and return `datetime` field with validateTime().
+	timestamp, err := validateTime(fields[0])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	src_ip, err := validateIP(fields[3])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	src_port, err := validatePort(fields[4])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	dst_ip, err := validateIP(fields[5])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	dst_port, err := validatePort(fields[6])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	bytes_in, err := validateInt64(fields[7])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	bytes_out, err := validateInt64(fields[8])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	packets_in, err := validateInt64(fields[9])
+	if err != nil {
+		log.Printf("%v, skipping: %s\n", err, line)
+		return nil
+	}
+	packets_out, err := validateInt64(fields[10])
 	if err != nil {
 		log.Printf("%v, skipping: %s\n", err, line)
 		return nil
 	}
 
-	// <TODO: Implement me!>
-	// Parse and return `src_ip` field with validateIP().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `src_port` field with validatePort().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `dst_ip` field with validateIP().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `dst_port` field with validatePort().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `bytes_in` field with validateInt64().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `bytes_out` field with validateInt64().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `packets_in` field with validateInt64().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Parse and return `packets_out` field with validateInt64().
-	if err != nil {
-		log.Printf("%v, skipping: %s\n", err, line)
-		return nil
-	}
-
-	// <TODO: Implement me!>
-	// Return a populated NormalizedLog proto message.
 	return &nlpb.NormalizedLog{
-		Msg: &nlpb.NormalizedLog_NetflowLog{},
+		Msg: &nlpb.NormalizedLog_NetflowLog{
+			NetflowLog: &nlpb.Netflow{
+				Timestamp:  timestamp,
+				SrcIp:      src_ip,
+				SrcPort:    src_port,
+				DstIp:      dst_ip,
+				DstPort:    dst_port,
+				BytesIn:    bytes_in,
+				BytesOut:   bytes_out,
+				PacketsIn:  packets_in,
+				PacketsOut: packets_out,
+				Protocol:   fields[2],
+				LogSource:  fields[1],
+			},
+		},
 	}
 }

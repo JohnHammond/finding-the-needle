@@ -136,6 +136,7 @@ func main() {
 		log.Fatalf("failed loading normalized logs: %v", err)
 	}
 
+
 	// Run detection rules.
 	detections := []Detection{
 		&BadDomainDetection{
@@ -151,7 +152,9 @@ func main() {
 			logs: nl,
 		},
 	}
+
 	for _, d := range detections {
+
 		sigs, err := d.run()
 		if err != nil {
 			log.Fatal(err)

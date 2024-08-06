@@ -106,6 +106,7 @@ func (nl *NormalizedLog) load() error {
 func output(name string, sigs []*spb.Signal) error {
 	// Set up output file for signals.
 	path := fmt.Sprintf(signalPath, name)
+	
 	out, err := os.Create(path)
 	if err != nil {
 		return fmt.Errorf("failed to create output file %s: %s", path, err)
@@ -152,11 +153,14 @@ func main() {
 		},
 	}
 	for _, d := range detections {
+
 		sigs, err := d.run()
 		if err != nil {
 			log.Fatal(err)
 		}
+		
 		// Write any returned signals to disk.
+
 		output(d.ruleName(), sigs)
 	}
 }

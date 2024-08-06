@@ -13,3 +13,12 @@ go test -v -run TestNetflowNormalizer github.com/bearlyrunning/FindingTheNeedle/
 go test -v -run TestExecutionNormalizer github.com/bearlyrunning/FindingTheNeedle/go/normalizer
 go test -v -run TestSplitWithEscape github.com/bearlyrunning/FindingTheNeedle/go/normalizer
 ```
+
+
+--------------
+
+
+
+John's notes:
+
+1. Start with DNS normalization
